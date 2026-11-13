@@ -167,7 +167,12 @@ DEFAULT_COUNT = 1
 MIN_INTERVAL = 1.5
 # Attempts per API call when the balancer parks us in its "Please wait" queue,
 # and the pauses between them (it can stay tripped for a while).
-MAX_ATTEMPTS = 4
+#
+# Kept deliberately low: with 4 attempts x BACKOFF the adapter could spend ~39 s
+# asleep on a single request, and a full scan makes ~32 of them - measured at
+# 58% of total scan time, for data that arrives as a stale fallback anyway.
+# Two attempts still covers a transient queue page without stalling the scan.
+MAX_ATTEMPTS = 2
 BACKOFF = (4.0, 10.0, 25.0)
 # ``type`` values SimplyBook uses for a time it will actually sell.  An allowlist,
 # never a blocklist: "busy" and friends must never leak into the calendar.
@@ -192,6 +197,14 @@ _PACE_LAST = 0.0
 _DURATION_LOCK = threading.Lock()
 _DURATION_CACHE: dict[str, int | None] = {}
 
+# SimplyBook answers a throttled request with a "please wait" queue page or by
+# simply hanging. Sitting through the generic 45 s x 3-attempt budget produces
+# nothing usable - only a stale fallback - while stalling the whole scan (this
+# adapter measured at 58% of total scan time). Fail fast instead and let the
+# stale cache answer for the rooms that could not be reached.
+_TIMEOUT = 12
+_RETRIES = 1
+
 
 # --------------------------------------------------------------------------- #
 # transport
@@ -209,7 +222,8 @@ def _pace() -> None:
 def _fetch(url: str, headers: dict | None = None) -> tuple[int, str]:
     """``fetch()`` with its RuntimeError translated into an ``AdapterError``."""
     try:
-        return fetch(url, headers=headers, cache=False, timeout=30)
+        return fetch(url, headers=headers, cache=False,
+                     timeout=_TIMEOUT, retries=_RETRIES)
     except Exception as exc:  # noqa: BLE001 - fetch() raises after its own retries
         raise AdapterError(f"simplybook: cannot fetch {url}: {exc}") from exc
 
@@ -420,7 +434,8 @@ def _service_duration(base_url: str, service_id: str) -> int | None:
     minutes: int | None = None
     try:
         _pace()
-        status, text = fetch(base_url + SERVICES_PATH, cache=False, timeout=30, headers={
+        status, text = fetch(base_url + SERVICES_PATH, cache=False,
+                             timeout=_TIMEOUT, retries=_RETRIES, headers={
             "Accept": "application/json, text/javascript, */*; q=0.01",
             "X-Requested-With": "XMLHttpRequest",
         })
