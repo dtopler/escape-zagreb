@@ -317,7 +317,7 @@ function coverageBanner(firstIso, lastIso, label) {
 async function scanTo(endIso) {
   if (!S.data) return;
   if (STATIC_SITE) {
-    toast('This is a published snapshot — it refreshes every 15 minutes.');
+    toast('This is a published snapshot — it is refreshed once an hour.');
     return;
   }
   const start = S.data.window.start;
@@ -833,13 +833,13 @@ async function loadState() {
   } catch (err) {
     document.getElementById('calendar').innerHTML =
       `<div class="skeleton">Could not load the snapshot (${esc(String(err.message || err))}).<br />`
-      + 'It is republished every 15 minutes — reload in a moment.</div>';
+      + 'It is republished once an hour — reload in a moment.</div>';
     return;
   }
   if (data.status === 'empty') {
     S.data = null;
     document.getElementById('calendar').innerHTML = STATIC_SITE
-      ? '<div class="skeleton">No snapshot published yet — the first scrape runs within 15 minutes.</div>'
+      ? '<div class="skeleton">No snapshot published yet — the first scrape runs within the hour.</div>'
       : '<div class="skeleton">First scan running… this takes ~1 minute. The page reloads itself.</div>';
     if (!STATIC_SITE) pollProgress();
     return;

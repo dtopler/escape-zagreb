@@ -1,20 +1,22 @@
 name: scrape
 
-# Publishes a fresh availability snapshot every 15 minutes.
+# Publishes a fresh availability snapshot once an hour.
 #
 # Deliberately separate from the Pages build: this workflow only writes to the
 # `data` branch, so the site is deployed once and never rebuilt per scrape.
-# GitHub Pages would otherwise see ~96 builds/day.
+# Committing to `main` instead would mean ~24 Pages builds/day for no benefit.
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    # :07 rather than :00 - GitHub queues a large share of the world's crons on
+    # the hour, and off-peak minutes are far less likely to be delayed.
+    - cron: "7 * * * *"
   workflow_dispatch:
     inputs:
       days:
         description: "How many days ahead to scan"
         required: false
-        default: "30"
+        default: "21"
 
 permissions:
   contents: write
@@ -51,10 +53,10 @@ jobs:
 
       - name: scrape
         env:
-          # must expire inside one cycle, or a 15-minute cron finds every entry
-          # still fresh and skips the scrape entirely
+          # keep the cross-run cache shorter than the cycle, so every run really
+          # re-reads the providers instead of answering from cache
           ESCAPE_CACHE_TTL: "600"
-        run: python aggregate.py ${{ github.event.inputs.days || '30' }}
+        run: python aggregate.py ${{ github.event.inputs.days || '21' }}
 
       - name: verify snapshot
         run: |

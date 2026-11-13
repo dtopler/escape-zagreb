@@ -1,7 +1,7 @@
 name: pages
 
 # Deploys web/ to GitHub Pages. Runs only when the front end changes - the
-# 15-minute scrape pushes data.json to the `data` branch and does not trigger
+# hourly scrape pushes data.json to the `data` branch and does not trigger
 # this workflow at all.
 
 on:
