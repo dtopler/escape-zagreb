@@ -1,0 +1,346 @@
+{
+ "cluego/krada-mona-lise": {
+  "players_min": 2,
+  "players_max": 7,
+  "duration_min": 75,
+  "tags": [
+   "Heist"
+  ],
+  "source": "worldofescapes"
+ },
+ "cluego/tajna-profesora-balthazara": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 75,
+  "tags": [],
+  "source": "worldofescapes"
+ },
+ "cluego/memento": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 75,
+  "tags": [],
+  "source": "worldofescapes"
+ },
+ "cluego/anno-1202": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 75,
+  "tags": [
+   "Historic"
+  ],
+  "source": "manual"
+ },
+ "escapeart/magicna-knjiznica": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 75,
+  "tags": [
+   "Adventure",
+   "Challenging",
+   "Mystical"
+  ],
+  "source": "worldofescapes"
+ },
+ "escapeart/robin-hood": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Adventure",
+   "Historic"
+  ],
+  "source": "worldofescapes"
+ },
+ "escapeart/drakuline-odaje": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Horror",
+   "Mystical",
+   "Vampires"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-4": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 60,
+  "tags": [
+   "Challenging",
+   "Horror",
+   "Hospital",
+   "Mystical"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-single-haunted-html": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Challenging",
+   "Horror",
+   "Mystical"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-3": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Horror",
+   "Mystical",
+   "Prison",
+   "Vampires"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-1": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Horror",
+   "Prison"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-5": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 66,
+  "tags": [
+   "Challenging",
+   "Horror"
+  ],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-7": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 60,
+  "tags": [],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-6": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 60,
+  "tags": [],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-8": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 60,
+  "tags": [],
+  "source": "worldofescapes"
+ },
+ "lockup/room-detail-asp-roomid-9": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 60,
+  "tags": [],
+  "source": null
+ },
+ "foxinabox/reservation-index-game-zodiac-killer": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Detective",
+   "Horror",
+   "Prison"
+  ],
+  "source": "worldofescapes"
+ },
+ "foxinabox/reservation-index-game-prison-day-20": {
+  "players_min": 2,
+  "players_max": 6,
+  "duration_min": 60,
+  "tags": [
+   "Prison"
+  ],
+  "source": "worldofescapes"
+ },
+ "foxinabox/reservation-index-game-bank": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [
+   "Adventure"
+  ],
+  "source": "manual"
+ },
+ "elephant/na-c5-a1e-sobe": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [],
+  "source": null
+ },
+ "enigmarium/tajanstveni-slucaj-zagrebacke-vjestice": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Historic",
+   "Mystical"
+  ],
+  "source": "worldofescapes"
+ },
+ "enigmarium/femme-fatale": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Mystical"
+  ],
+  "source": "worldofescapes"
+ },
+ "enigmarium/unlock-zagreb": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 60,
+  "tags": [
+   "Outdoor",
+   "Adventure"
+  ],
+  "source": "provider page+manual"
+ },
+ "arena/game-rooms-mind-crime-2": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 41,
+  "tags": [
+   "Detective"
+  ],
+  "source": "manual"
+ },
+ "arena/game-rooms-amazing-heist": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [
+   "Heist"
+  ],
+  "source": "manual"
+ },
+ "arena/game-rooms-the-office-of-john-monroe": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [],
+  "source": null
+ },
+ "arena/game-rooms-lev-pasted": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [],
+  "source": null
+ },
+ "arena/game-rooms-secret-agent-room": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [
+   "Detective"
+  ],
+  "source": "manual"
+ },
+ "portal/avantura-kocke": {
+  "players_min": 2,
+  "players_max": 8,
+  "duration_min": 75,
+  "tags": [
+   "Challenging"
+  ],
+  "source": "worldofescapes"
+ },
+ "portal/avanture-dvorac-crne-kraljice": {
+  "players_min": 2,
+  "players_max": 8,
+  "duration_min": 60,
+  "tags": [
+   "Prison"
+  ],
+  "source": "worldofescapes"
+ },
+ "portal/avanture-tajna-don-carla": {
+  "players_min": 2,
+  "players_max": 8,
+  "duration_min": 75,
+  "tags": [
+   "Detective"
+  ],
+  "source": "worldofescapes"
+ },
+ "portal/avanture-ozirisov-hram": {
+  "players_min": 2,
+  "players_max": 8,
+  "duration_min": 80,
+  "tags": [
+   "Adventure",
+   "Ancient",
+   "Challenging"
+  ],
+  "source": "worldofescapes"
+ },
+ "exitgames/booking-system-trinity": {
+  "players_min": 2,
+  "players_max": 7,
+  "duration_min": 60,
+  "tags": [
+   "Sci-fi"
+  ],
+  "source": "worldofescapes"
+ },
+ "exitgames/booking-system-grofica-iz-petrinjske-ulice": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": null,
+  "tags": [],
+  "source": null
+ },
+ "exitgames/booking-system-teslino-nasljede": {
+  "players_min": 2,
+  "players_max": 7,
+  "duration_min": 60,
+  "tags": [
+   "Historic"
+  ],
+  "source": "worldofescapes"
+ },
+ "cluego/reservation-403-forbidden-kalendar": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 75,
+  "tags": [],
+  "source": null
+ },
+ "enigmarium/laboratorij-crne-kraljice": {
+  "players_min": 2,
+  "players_max": 5,
+  "duration_min": 75,
+  "tags": [],
+  "source": "provider page"
+ },
+ "lockup/room-detail-asp-roomid-10": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 60,
+  "tags": [],
+  "source": null
+ },
+ "lockup/room-detail-asp-roomid-11": {
+  "players_min": null,
+  "players_max": null,
+  "duration_min": 60,
+  "tags": [],
+  "source": null
+ }
+}

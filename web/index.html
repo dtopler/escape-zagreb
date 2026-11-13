@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Escape Room Zagreb — availability</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">◈</span>
+    <div>
+      <h1>Escape Room Zagreb</h1>
+      <p>live availability across every room</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="segmented" role="tablist" aria-label="View">
+      <button data-view="month" class="active" role="tab">Month</button>
+      <button data-view="week" role="tab">Week</button>
+      <button data-view="rooms" role="tab">Rooms</button>
+    </div>
+
+    <div class="nav">
+      <button id="prev" title="Previous (←)" aria-label="Previous">‹</button>
+      <span id="rangeLabel">—</span>
+      <button id="next" title="Next (→)" aria-label="Next">›</button>
+      <button id="today" class="ghost">Today</button>
+    </div>
+
+    <div class="search">
+      <input id="roomSearch" type="search" placeholder="Find a room…" autocomplete="off" />
+      <div id="searchResults" class="search-results" hidden></div>
+    </div>
+
+    <button id="refresh" class="ghost" title="Re-scrape the current window">Refresh</button>
+  </div>
+</header>
+
+<div class="statusbar">
+  <div id="providerChips" class="chips"></div>
+  <div class="status-right">
+    <span id="dataStamp" class="muted"></span>
+    <span id="scanProgress" class="scan" hidden>
+      <span class="bar"><i></i></span><span class="scan-text"></span>
+    </span>
+  </div>
+</div>
+
+<div class="filterbar">
+  <label class="fgroup" for="playersFilter">
+    <span class="flabel">Players</span>
+    <select id="playersFilter">
+      <option value="">any</option>
+      <option>2</option><option>3</option><option>4</option><option>5</option>
+      <option>6</option><option>7</option><option>8</option><option>9</option>
+      <option>10</option><option>11</option><option>12</option>
+    </select>
+  </label>
+  <div class="fgroup">
+    <span class="flabel">Type</span>
+    <div id="genreFilter" class="chips"></div>
+  </div>
+  <button id="clearFilters" class="ghost" hidden>Clear filters</button>
+  <span id="filterNote" class="muted"></span>
+</div>
+
+<div id="roomFocus" class="focus" hidden></div>
+
+<main>
+  <section id="calendar" class="calendar-wrap" aria-live="polite"></section>
+  <aside id="details" class="details"></aside>
+</main>
+
+<footer class="foot">
+  <span>Times are Europe/Zagreb · slots scraped from each provider's own booking system</span>
+  <span id="coverage" class="muted"></span>
+</footer>
+
+<div id="toast" class="toast" hidden></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

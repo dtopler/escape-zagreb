@@ -1,0 +1,47 @@
+name: pages
+
+# Deploys web/ to GitHub Pages. Runs only when the front end changes - the
+# 15-minute scrape pushes data.json to the `data` branch and does not trigger
+# this workflow at all.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: point the page at the published snapshot
+        run: |
+          cat > web/config.js <<EOF
+          window.ESCAPE_DATA_URL = "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/data.json";
+          EOF
+          cat web/config.js
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

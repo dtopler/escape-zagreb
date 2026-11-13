@@ -1,0 +1,580 @@
+[
+  {
+    "id": "cluego/krada-mona-lise",
+    "provider_id": "cluego",
+    "provider": "ClueGo",
+    "room": "Krađa Mona Lise",
+    "url": "http://www.cluego.eu/krada-mona-lise/",
+    "schedule_url": "https://www.cluego.eu/reservation/mona-lisa-heist/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 7,
+    "duration_min": 75,
+    "tags": [
+      "Heist"
+    ]
+  },
+  {
+    "id": "cluego/tajna-profesora-balthazara",
+    "provider_id": "cluego",
+    "provider": "ClueGo",
+    "room": "Tajna profesora Baltazara",
+    "url": "http://www.cluego.eu/tajna-profesora-balthazara/",
+    "schedule_url": "https://www.cluego.eu/rezervacije/tajna-profesora-baltazara/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 75,
+    "tags": []
+  },
+  {
+    "id": "cluego/memento",
+    "provider_id": "cluego",
+    "provider": "ClueGo",
+    "room": "Memento",
+    "url": "http://www.cluego.eu/memento/",
+    "schedule_url": "https://www.cluego.eu/reservation/memento/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 75,
+    "tags": []
+  },
+  {
+    "id": "cluego/anno-1202",
+    "provider_id": "cluego",
+    "provider": "ClueGo",
+    "room": "Anno 1202.",
+    "url": "https://www.cluego.eu/anno-1202/",
+    "schedule_url": "https://www.cluego.eu/reservation/anno-1202/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 75,
+    "tags": [
+      "Historic"
+    ]
+  },
+  {
+    "id": "escapeart/magicna-knjiznica",
+    "provider_id": "escapeart",
+    "provider": "Escape Art",
+    "room": "Magična knjižnica",
+    "url": "https://escapeart.hr/magicna-knjiznica/",
+    "schedule_url": "https://escapeart.hr/magicna-knjiznica/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 75,
+    "tags": [
+      "Adventure",
+      "Challenging",
+      "Mystical"
+    ]
+  },
+  {
+    "id": "escapeart/robin-hood",
+    "provider_id": "escapeart",
+    "provider": "Escape Art",
+    "room": "Robin Hood",
+    "url": "https://escapeart.hr/robin-hood/",
+    "schedule_url": "https://escapeart.hr/robin-hood/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Adventure",
+      "Historic"
+    ]
+  },
+  {
+    "id": "escapeart/drakuline-odaje",
+    "provider_id": "escapeart",
+    "provider": "Escape Art",
+    "room": "Grof Dracula",
+    "url": "https://escapeart.hr/drakuline-odaje/",
+    "schedule_url": "https://escapeart.hr/drakuline-odaje/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Horror",
+      "Mystical",
+      "Vampires"
+    ]
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-4",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Mrtvačnica",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=4",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=4",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 60,
+    "tags": [
+      "Challenging",
+      "Horror",
+      "Hospital",
+      "Mystical"
+    ]
+  },
+  {
+    "id": "lockup/room-single-haunted-html",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Ukleti hotel",
+    "url": "https://www.theoldlockup.com/room-single_haunted.html",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=2",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Challenging",
+      "Horror",
+      "Mystical"
+    ]
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-3",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Kripta",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=3",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=3",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Horror",
+      "Mystical",
+      "Prison",
+      "Vampires"
+    ]
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-1",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Kidnapped",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=1",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=1",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Horror",
+      "Prison"
+    ]
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-5",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Presuda",
+    "url": "https://theoldlockup.com/room-detail.asp?roomid=5",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=5",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 66,
+    "tags": [
+      "Challenging",
+      "Horror"
+    ]
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-7",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Soba panike",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=7",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=7",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 60,
+    "tags": []
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-6",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Narcos",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=6",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=6",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 60,
+    "tags": []
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-8",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Ritual",
+    "url": "http://www.theoldlockup.com/room-detail.asp?roomid=8",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=8",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 60,
+    "tags": []
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-9",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Promatrači",
+    "url": "https://theoldlockup.com/room-detail.asp?roomid=9",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=9",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 60,
+    "tags": []
+  },
+  {
+    "id": "foxinabox/reservation-index-game-zodiac-killer",
+    "provider_id": "foxinabox",
+    "provider": "Fox in a Box",
+    "room": "Zodiac Killer",
+    "url": "https://zagreb.roomescape.hr/reservation/index/game/zodiac_killer",
+    "schedule_url": "https://zagreb.roomescape.hr/reservation/index/game/zodiac_killer",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Detective",
+      "Horror",
+      "Prison"
+    ]
+  },
+  {
+    "id": "foxinabox/reservation-index-game-prison-day-20",
+    "provider_id": "foxinabox",
+    "provider": "Fox in a Box",
+    "room": "Bijeg iz zatvora",
+    "url": "https://zagreb.roomescape.hr/reservation/index/game/prison/day/20",
+    "schedule_url": "https://zagreb.roomescape.hr/reservation/index/game/prison",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 6,
+    "duration_min": 60,
+    "tags": [
+      "Prison"
+    ]
+  },
+  {
+    "id": "foxinabox/reservation-index-game-bank",
+    "provider_id": "foxinabox",
+    "provider": "Fox in a Box",
+    "room": "Golden Nugget Saloon",
+    "url": "https://zagreb.roomescape.hr/reservation/index/game/bank",
+    "schedule_url": "https://zagreb.roomescape.hr/reservation/index/game/bank",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": [
+      "Adventure"
+    ]
+  },
+  {
+    "id": "elephant/na-c5-a1e-sobe",
+    "provider_id": "elephant",
+    "provider": "Elephant in the Escape Room",
+    "room": "EX (IT) YOU",
+    "url": "https://www.elephantescape.hr/na%C5%A1e-sobe",
+    "schedule_url": "https://www.elephantescape.hr/booking-calendar/ex-it-yu",
+    "dead_link": true,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": []
+  },
+  {
+    "id": "enigmarium/tajanstveni-slucaj-zagrebacke-vjestice",
+    "provider_id": "enigmarium",
+    "provider": "Enigmarium",
+    "room": "Grička vještica",
+    "url": "https://enigmarium.hr/tajanstveni-slucaj-zagrebacke-vjestice/",
+    "schedule_url": "https://enigmarium.hr/tajanstveni-slucaj-zagrebacke-vjestice/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Historic",
+      "Mystical"
+    ]
+  },
+  {
+    "id": "enigmarium/femme-fatale",
+    "provider_id": "enigmarium",
+    "provider": "Enigmarium",
+    "room": "Femme fatale",
+    "url": "https://enigmarium.hr/femme-fatale/",
+    "schedule_url": "https://enigmarium.hr/femme-fatale/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Mystical"
+    ]
+  },
+  {
+    "id": "enigmarium/unlock-zagreb",
+    "provider_id": "enigmarium",
+    "provider": "Enigmarium",
+    "room": "Unlock Zagreb",
+    "url": "https://enigmarium.hr/unlock-zagreb/",
+    "schedule_url": "https://enigmarium.hr/unlock-zagreb/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 60,
+    "tags": [
+      "Outdoor",
+      "Adventure"
+    ]
+  },
+  {
+    "id": "arena/game-rooms-mind-crime-2",
+    "provider_id": "arena",
+    "provider": "Escape Room Arena",
+    "room": "Mind Crime",
+    "url": "https://www.escape-arena.com/game-rooms/mind-crime-2/",
+    "schedule_url": "https://www.escape-arena.com/game-rooms/mind-crime-2/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 41,
+    "tags": [
+      "Detective"
+    ]
+  },
+  {
+    "id": "arena/game-rooms-amazing-heist",
+    "provider_id": "arena",
+    "provider": "Escape Room Arena",
+    "room": "The Amazing Heist",
+    "url": "https://www.escape-arena.com/game-rooms/amazing-heist/",
+    "schedule_url": "https://www.escape-arena.com/game-rooms/amazing-heist/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": [
+      "Heist"
+    ]
+  },
+  {
+    "id": "arena/game-rooms-the-office-of-john-monroe",
+    "provider_id": "arena",
+    "provider": "Escape Room Arena",
+    "room": "The Office of John Monroe",
+    "url": "https://www.escape-arena.com/game-rooms/the-office-of-john-monroe/",
+    "schedule_url": "https://www.escape-arena.com/game-rooms/the-office-of-john-monroe/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": []
+  },
+  {
+    "id": "arena/game-rooms-lev-pasted",
+    "provider_id": "arena",
+    "provider": "Escape Room Arena",
+    "room": "The Lab of Dr. Lev Pasted",
+    "url": "https://www.escape-arena.com/game-rooms/lev-pasted/",
+    "schedule_url": "https://www.escape-arena.com/game-rooms/lev-pasted/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": []
+  },
+  {
+    "id": "arena/game-rooms-secret-agent-room",
+    "provider_id": "arena",
+    "provider": "Escape Room Arena",
+    "room": "The Secret Agent Room",
+    "url": "https://www.escape-arena.com/game-rooms/secret-agent-room/",
+    "schedule_url": "https://www.escape-arena.com/game-rooms/secret-agent-room/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": [
+      "Detective"
+    ]
+  },
+  {
+    "id": "portal/avantura-kocke",
+    "provider_id": "portal",
+    "provider": "Portal Escape",
+    "room": "Kocke",
+    "url": "http://portalescape.com/avantura-kocke/?gclid=EAIaIQobChMIsobc9tKU5wIVyueaCh1stgu8EAAYASACEgIn7_D_BwE",
+    "schedule_url": "http://portalescape.com/avantura-kocke/?gclid=EAIaIQobChMIsobc9tKU5wIVyueaCh1stgu8EAAYASACEgIn7_D_BwE",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 8,
+    "duration_min": 75,
+    "tags": [
+      "Challenging"
+    ]
+  },
+  {
+    "id": "portal/avanture-dvorac-crne-kraljice",
+    "provider_id": "portal",
+    "provider": "Portal Escape",
+    "room": "Crna kraljica",
+    "url": "https://portalescape.com/avanture/dvorac-crne-kraljice",
+    "schedule_url": "https://portalescape.com/avanture/dvorac-crne-kraljice",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 8,
+    "duration_min": 60,
+    "tags": [
+      "Prison"
+    ]
+  },
+  {
+    "id": "portal/avanture-tajna-don-carla",
+    "provider_id": "portal",
+    "provider": "Portal Escape",
+    "room": "Tajna Don Carla",
+    "url": "https://portalescape.com/avanture/tajna-don-carla",
+    "schedule_url": "https://portalescape.com/avanture/tajna-don-carla",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 8,
+    "duration_min": 75,
+    "tags": [
+      "Detective"
+    ]
+  },
+  {
+    "id": "portal/avanture-ozirisov-hram",
+    "provider_id": "portal",
+    "provider": "Portal Escape",
+    "room": "Ozirisov hram",
+    "url": "https://portalescape.com/avanture/ozirisov-hram",
+    "schedule_url": "https://portalescape.com/avanture/ozirisov-hram",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 8,
+    "duration_min": 80,
+    "tags": [
+      "Adventure",
+      "Ancient",
+      "Challenging"
+    ]
+  },
+  {
+    "id": "exitgames/booking-system-trinity",
+    "provider_id": "exitgames",
+    "provider": "Exit Games",
+    "room": "Project G.A.R.Y.",
+    "url": "https://www.exitgames.hr/booking-system/trinity/",
+    "schedule_url": "https://www.exitgames.hr/booking-system/trinity/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 7,
+    "duration_min": 60,
+    "tags": [
+      "Sci-fi"
+    ]
+  },
+  {
+    "id": "exitgames/booking-system-grofica-iz-petrinjske-ulice",
+    "provider_id": "exitgames",
+    "provider": "Exit Games",
+    "room": "Grofica iz Petrinjske",
+    "url": "https://www.exitgames.hr/booking-system/grofica-iz-petrinjske-ulice/",
+    "schedule_url": "https://www.exitgames.hr/booking-system/grofica-iz-petrinjske-ulice/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": null,
+    "tags": []
+  },
+  {
+    "id": "exitgames/booking-system-teslino-nasljede",
+    "provider_id": "exitgames",
+    "provider": "Exit Games",
+    "room": "Tesla",
+    "url": "https://www.exitgames.hr/booking-system/teslino-nasljede/",
+    "schedule_url": "https://www.exitgames.hr/booking-system/teslino-nasljede/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 7,
+    "duration_min": 60,
+    "tags": [
+      "Historic"
+    ]
+  },
+  {
+    "id": "cluego/reservation-403-forbidden-kalendar",
+    "provider_id": "cluego",
+    "provider": "ClueGo",
+    "room": "403 FORBIDDEN",
+    "url": "https://www.cluego.eu/reservation/403-forbidden-kalendar/",
+    "schedule_url": "https://www.cluego.eu/reservation/403-forbidden-kalendar/",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 75,
+    "tags": []
+  },
+  {
+    "id": "enigmarium/laboratorij-crne-kraljice",
+    "provider_id": "enigmarium",
+    "provider": "Enigmarium",
+    "room": "Laboratorij crne kraljice",
+    "url": "https://enigmarium.hr/laboratorij-crne-kraljice/",
+    "schedule_url": "https://enigmarium.hr/laboratorij-crne-kraljice/",
+    "dead_link": false,
+    "players_min": 2,
+    "players_max": 5,
+    "duration_min": 75,
+    "tags": []
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-10",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Circus",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=10",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=10",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 60,
+    "tags": []
+  },
+  {
+    "id": "lockup/room-detail-asp-roomid-11",
+    "provider_id": "lockup",
+    "provider": "The Old Lock Up",
+    "room": "Missing",
+    "url": "https://www.theoldlockup.com/room-detail.asp?roomid=11",
+    "schedule_url": "https://www.theoldlockup.com/booking-formb.asp?room_id=11",
+    "dead_link": false,
+    "players_min": null,
+    "players_max": null,
+    "duration_min": 60,
+    "tags": []
+  }
+]

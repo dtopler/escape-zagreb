@@ -1,0 +1,90 @@
+name: scrape
+
+# Publishes a fresh availability snapshot every 15 minutes.
+#
+# Deliberately separate from the Pages build: this workflow only writes to the
+# `data` branch, so the site is deployed once and never rebuilt per scrape.
+# GitHub Pages would otherwise see ~96 builds/day.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "How many days ahead to scan"
+        required: false
+        default: "30"
+
+permissions:
+  contents: write
+
+# never run two scrapes at once; queue instead of cancelling a half-done scan
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # the stale cache is what lets a blocked/throttled provider fall back to
+      # its last known answer instead of publishing "nothing free"
+      - name: restore scraper caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/slot_cache.json
+            data/stale_cache.json
+          key: scraper-cache-${{ github.run_id }}
+          restore-keys: |
+            scraper-cache-
+
+      - name: scrape
+        env:
+          # must expire inside one cycle, or a 15-minute cron finds every entry
+          # still fresh and skips the scrape entirely
+          ESCAPE_CACHE_TTL: "600"
+        run: python aggregate.py ${{ github.event.inputs.days || '30' }}
+
+      - name: verify snapshot
+        run: |
+          python - <<'PY'
+          import json, sys
+          doc = json.load(open("data/availability.json", encoding="utf-8"))
+          rooms = [r for r in doc["rooms"] if r["total_slots"]]
+          total = sum(r["total_slots"] for r in doc["rooms"])
+          print(f"{len(rooms)} rooms with slots / {len(doc['rooms'])} rooms, {total} slots")
+          print(f"window {doc['window']['start']} .. {doc['window']['end']}")
+          if not rooms:
+              sys.exit("every room came back empty - keeping the previous snapshot")
+          PY
+
+      - name: publish to data branch
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/publish && mkdir -p /tmp/publish
+          cp data/availability.json /tmp/publish/data.json
+          cd /tmp/publish
+          git init -q -b data
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # keeps the token out of the remote URL (and therefore out of logs)
+          git config "http.https://github.com/.extraheader" \
+            "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)"
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git add data.json
+          git commit -qm "snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push -q --force origin data:data
+          echo "published $(wc -c < data.json) bytes to the data branch"

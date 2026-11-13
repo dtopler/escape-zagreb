@@ -1,0 +1,5 @@
+# Keep LF in the repo and in checkouts. The workflows embed shell heredocs in
+# `run:` blocks, and CRLF there fails on Linux runners with "$'\r': command not found".
+* text=auto eol=lf
+*.png binary
+*.stl binary

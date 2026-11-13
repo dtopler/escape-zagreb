@@ -1,0 +1,20 @@
+# generated at scan time — the published copy lives on the `data` branch
+data/availability.json
+data/slot_cache.json
+data/stale_cache.json
+
+# recon cache written by fetch.py
+raw/
+
+# python
+__pycache__/
+*.pyc
+
+# local run artefacts
+*.log
+shot-*.png
+_probe_*.py
+
+# scratch dirs used while testing tooling here
+._tools/
+._tmp/
