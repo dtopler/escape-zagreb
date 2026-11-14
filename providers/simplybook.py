@@ -220,7 +220,9 @@ _DURATION_CACHE: dict[str, int | None] = {}
 # adapter measured at 58% of total scan time). Fail fast instead and let the
 # stale cache answer for the rooms that could not be reached.
 _TIMEOUT = 12
-_RETRIES = 1
+# 0: the outer loop below already retries once, and stacking fetch()'s own retry
+# on top would mean four requests per call. Exactly one retry, never more.
+_RETRIES = 0
 
 
 # --------------------------------------------------------------------------- #
