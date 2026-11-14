@@ -45,6 +45,12 @@ _progress = {
     "message": "",
 }
 _progress_lock = threading.Lock()
+# Wall time actually spent inside each adapter. Printed at the end of a scan so
+# a slow provider is visible in the CI log instead of being guessed at from a
+# long silence.
+_timing: dict[str, float] = {}
+_timing_lock = threading.Lock()
+_scan_started = 0.0
 
 
 def progress() -> dict:
@@ -60,8 +66,12 @@ def _set(**kw) -> None:
 def _tick(message: str = "") -> None:
     with _progress_lock:
         _progress["done"] += 1
+        done, total = _progress["done"], _progress["total"]
         if message:
             _progress["message"] = message
+        # CI has no UI to poll, so emit a line now and then to keep the log alive
+        if _scan_started and total and (done % 20 == 0 or done == total):
+            print(f"  [{done}/{total}] {time.time() - _scan_started:.0f}s", flush=True)
 
 
 def _note_error(text: str) -> None:
@@ -195,6 +205,10 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
          workers: int = 10) -> dict:
     """Scrape ``rooms x days`` and write data/availability.json."""
     started = time.time()
+    global _scan_started
+    _scan_started = started
+    with _timing_lock:
+        _timing.clear()
     rooms_all = load_rooms()
     days = window(days_ahead, start)
     room_sel = [r for r in rooms_all
@@ -260,6 +274,7 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         gate = provider_gate(room["provider_id"])
         sem = semaphore_for(url)
         with sem, (gate if gate is not None else _nullcontext()):
+            call_started = time.perf_counter()
             try:
                 slots = adapter.slots(room, day)
                 value = [s.as_dict() for s in slots]
@@ -280,6 +295,11 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
                     return key, fallback
                 _tick()
                 return key, []
+            finally:
+                seconds = time.perf_counter() - call_started
+                with _timing_lock:
+                    _timing[room["provider_id"]] = (
+                        _timing.get(room["provider_id"], 0.0) + seconds)
 
     if todo:
         with futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
@@ -366,6 +386,15 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         prov["rooms_stale"] = sum(1 for r in mine if r["stale_days"])
         prov["error"] = next((r["error"] for r in mine
                               if r["status"] in ("error", "stale")), None)
+
+    # where the wall time went — the first thing to look at when CI is slow
+    if _timing:
+        names = {p["id"]: p["name"] for p in doc["providers"]}
+        print("\n  adapter time, summed per provider:", flush=True)
+        for pid, secs in sorted(_timing.items(), key=lambda kv: -kv[1]):
+            print(f"    {names.get(pid, pid):<26} {secs:8.1f}s", flush=True)
+        print(f"    {'(scan wall clock)':<26} {time.time() - started:8.1f}s", flush=True)
+
     os.makedirs(DATA, exist_ok=True)
     tmp = f"{STATE_PATH}.tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
