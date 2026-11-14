@@ -29,8 +29,15 @@ def _slug(url: str) -> str:
 
 def fetch(url: str, *, method: str = "GET", data: bytes | None = None,
           headers: dict | None = None, cache: bool = True,
-          timeout: int = 45, retries: int = 2, tag: str = "") -> tuple[int, str]:
-    """Return (status, text). Cached on disk when cache=True (recon convenience)."""
+          timeout: int = 25, retries: int = 1, tag: str = "") -> tuple[int, str]:
+    """Return (status, text). Cached on disk when cache=True (recon convenience).
+
+    ``timeout``/``retries`` bound how long a *failing* host can stall a scan:
+    worst case ``timeout * (retries + 1) + 3`` seconds. Healthy calls answer in
+    well under a second and are unaffected, so the only thing a bigger budget
+    buys is a longer stall - on CI that showed up as a scan reaching 20/280
+    room-days in ten minutes while one host sat in its retry ladder.
+    """
     key = f"{_slug(url)}{'-' + tag if tag else ''}.txt"
     path = os.path.join(RAW, key)
     if cache and os.path.exists(path):

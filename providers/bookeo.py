@@ -124,8 +124,8 @@ REFERER = "https://portalescape.com/rezervacije/"
 
 # --- tunables --------------------------------------------------------------
 _PAUSE = 1.2          # seconds of politeness between Bookeo requests
-_TIMEOUT = 45
-_TRIES = 2            # session bootstrap attempts (captcha / expired pages)
+_TIMEOUT = 20
+_TRIES = 1            # session bootstrap attempts (captcha / expired pages)
 _COOLDOWN = 15.0      # seconds to wait before retrying a blocked bootstrap
 
 _WIDGET_SRC_RE = re.compile(
