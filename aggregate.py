@@ -33,6 +33,16 @@ PER_HOST_CONCURRENCY = 3
 # providers that punish parallel sessions with captchas / queue pages
 PER_PROVIDER_CONCURRENCY = {"portal": 1, "enigmarium": 2}
 
+# --- CI guards -------------------------------------------------------------
+# A scan must always finish inside the job timeout, and one misbehaving provider
+# must never starve the rest. Both budgets are in seconds, 0 disables them.
+SCAN_BUDGET = int(os.environ.get("ESCAPE_SCAN_BUDGET", "0"))
+PROVIDER_BUDGET = int(os.environ.get("ESCAPE_PROVIDER_BUDGET", "0"))
+# Providers that answer nothing at all from a datacenter IP are skipped outright
+# so they cost zero requests; their rooms are still listed, flagged as blocked.
+SKIP_PROVIDERS = {p.strip() for p in
+                  os.environ.get("ESCAPE_SKIP_PROVIDERS", "").split(",") if p.strip()}
+
 # ---------------------------------------------------------------- progress ---
 _progress = {
     "running": False,
@@ -213,7 +223,8 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
     days = window(days_ahead, start)
     room_sel = [r for r in rooms_all
                 if (not providers or r["provider_id"] in providers)
-                and is_supported(r["provider_id"])]
+                and is_supported(r["provider_id"])
+                and r["provider_id"] not in SKIP_PROVIDERS]
     room_sel.sort(key=lambda r: (r["provider_id"], r["room"]))
 
     todo: list[tuple[dict, str]] = []
@@ -259,9 +270,22 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         r["id"]: {d: [] for d in days} for r in room_sel
     }
     room_status: dict[str, dict] = {
-        r["id"]: {"status": "ok", "error": None, "failed": 0, "stale": 0, "errors": []}
+        r["id"]: {"status": "ok", "error": None, "failed": 0, "stale": 0,
+                  "skipped": 0, "errors": []}
         for r in room_sel
     }
+
+    deadline = started + SCAN_BUDGET if SCAN_BUDGET else None
+
+    def out_of_budget(provider_id: str) -> bool:
+        """True when this task must be skipped to keep the scan inside its budget."""
+        if deadline is not None and time.time() > deadline:
+            return True
+        if not PROVIDER_BUDGET:
+            return False
+        with _timing_lock:
+            used = _timing.get(provider_id, 0.0)
+        return used >= PROVIDER_BUDGET
 
     def work(room: dict, day: str):
         adapter = adapter_for(room["provider_id"])
@@ -270,6 +294,18 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         if cached is not None:
             _tick()
             return key, cached
+        if out_of_budget(room["provider_id"]):
+            # skipped, not failed: the provider is out of time or over its budget.
+            # Publishing the last known answer beats publishing "nothing free".
+            status = room_status[room["id"]]
+            status["skipped"] += 1
+            fallback = _stale.get(key)
+            if fallback is not None:
+                status["stale"] += 1
+                _tick()
+                return key, fallback
+            _tick()
+            return key, []
         url = room.get("schedule_url") or room["url"]
         gate = provider_gate(room["provider_id"])
         sem = semaphore_for(url)
@@ -334,19 +370,27 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
     rooms_out = []
     for room in room_sel:
         status = room_status[room["id"]]
-        failed, stale, total_days = status["failed"], status["stale"], len(days)
-        if failed == 0:
+        failed, stale, skipped = status["failed"], status["stale"], status["skipped"]
+        total_days = len(days)
+        missed = failed + skipped
+        if missed == 0:
             label, error = "ok", None
-        elif stale and stale == failed:
+        elif stale and stale == missed:
             label = "stale"
             error = (f"provider unreachable, showing previous data for {stale} day(s) — "
-                     + (status["error"] or ""))
-        elif failed >= total_days:
-            label, error = "error", status["error"]
+                     + (status["error"] or "scan budget reached"))
+        elif missed >= total_days:
+            label, error = "error", status["error"] or "not refreshed"
         else:
+            bits = []
+            if failed:
+                bits.append(f"{failed}/{total_days} days not refreshed")
+            if skipped:
+                bits.append(f"{skipped}/{total_days} skipped to stay in budget")
             label = "partial"
-            error = (f"{failed}/{total_days} days not refreshed — "
-                     + "; ".join(status["errors"][:2]))
+            error = "; ".join(bits)
+            if status["errors"]:
+                error += " — " + "; ".join(status["errors"][:2])
         day_map = {d: v for d, v in results[room["id"]].items() if v}
         rooms_out.append({
             **{k: room.get(k) for k in ("id", "provider_id", "provider", "room",
@@ -361,16 +405,20 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
             "unsupported": False,
         })
 
-    # rooms whose provider has no adapter are still listed, flagged, for the UI
+    # rooms whose provider has no adapter (or is skipped here) still get listed
     for room in rooms_all:
         if room["provider_id"] in {r["provider_id"] for r in room_sel}:
             continue
+        blocked = room["provider_id"] in SKIP_PROVIDERS
         rooms_out.append({
             **{k: room.get(k) for k in ("id", "provider_id", "provider", "room",
                                         "url", "schedule_url", "players_min",
                                         "players_max", "duration_min", "tags")},
-            "slots": {}, "total_slots": 0, "status": "unsupported",
-            "error": None, "failed_days": 0, "stale_days": 0, "unsupported": True,
+            "slots": {}, "total_slots": 0,
+            "status": "blocked" if blocked else "unsupported",
+            "error": ("not scraped from CI: the provider blocks datacenter IPs"
+                      if blocked else None),
+            "failed_days": 0, "stale_days": 0, "unsupported": True,
         })
 
     doc = {
@@ -391,6 +439,9 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         prov["rooms_stale"] = sum(1 for r in mine if r["stale_days"])
         prov["error"] = next((r["error"] for r in mine
                               if r["status"] in ("error", "stale")), None)
+        if prov["id"] in SKIP_PROVIDERS:
+            prov["supported"] = False
+            prov["reason"] = "blocked here: the provider ignores datacenter IPs"
 
     # where the wall time went — the first thing to look at when CI is slow
     if _timing:

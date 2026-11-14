@@ -29,7 +29,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,6 +59,14 @@ jobs:
           # keep the cross-run cache shorter than the cycle, so every run really
           # re-reads the providers instead of answering from cache
           ESCAPE_CACHE_TTL: "600"
+          # hard ceilings: the whole scan stops starting new work at 12 min and
+          # publishes what it has, so the job always lands inside 15
+          ESCAPE_SCAN_BUDGET: "720"
+          # no single provider may eat more than 4 min of the scan
+          ESCAPE_PROVIDER_BUDGET: "240"
+          # Portal Escape answers nothing from datacenter IPs (0 slots, 4/4 rooms
+          # erroring, ~400s wasted) - skip it entirely until that changes
+          ESCAPE_SKIP_PROVIDERS: "portal"
         run: python aggregate.py ${{ github.event.inputs.days || '21' }}
 
       - name: verify snapshot
