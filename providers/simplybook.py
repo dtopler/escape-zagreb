@@ -66,16 +66,21 @@ so it needs no conversion.  With ``from == to`` (the **slots** view, what
 already restricted to what SimplyBook will sell: fully booked hours and closed
 days simply do not appear, and a day outside the booking window is ``[]`` too.
 
-Do **not** widen ``from``/``to``.  A multi-day range answers with the timeline
-*display grid* as well: the same 15-minute raster points come back tagged
-``"type": "busy"`` (``slots_count: 1``) next to the real ``"type": "free"``
-starts (``slots_count: 4``).  The adapter therefore always asks for one day and
-keeps only ``BOOKABLE_TYPES`` — an allowlist, so ``busy`` can never leak in.
+A multi-day range answers with the timeline *display grid* as well: the same
+15-minute raster points come back tagged ``"type": "busy"`` (``slots_count: 1``)
+next to the real ``"type": "free"`` starts (``slots_count: 4``).  Every row
+therefore goes through the ``BOOKABLE_TYPES`` allowlist — ``busy`` can never leak
+in — and is bucketed by its own ``date`` field.
 
-That filter doubles as the cross-check that pinned down this file: for
-2026-11-14, provider 1, the single-day call returns ``10:30`` and ``20:30``, and
-the ``free`` rows of a 2026-11-14…15 range call for the same room are exactly
-``10:30`` and ``20:30`` with everything between them ``busy``.
+The ``free`` rows of a range are exactly the union of the single-day answers.
+For 2026-11-14, provider 1, the single-day call returns ``10:30`` and ``20:30``,
+and the ``free`` rows of a 2026-11-14…15 range call for the same room are exactly
+``10:30`` and ``20:30``, everything between them ``busy``.  Verified up to a
+31-day range (2026-11-14…12-14 → 836 rows, 176 ``free``, 31 distinct days).
+
+So the adapter asks for **one ranged call per room** (``RANGE_DAYS``), not one
+per day: 31 requests plus 31 pacing sleeps per room is what made this provider
+58% of total scan time, for data identical to the ranged call.
 
 Headers / session / token flow
 ------------------------------
@@ -140,6 +145,7 @@ is optional: if it fails the slots are still returned with ``end=None``.
 """
 from __future__ import annotations
 
+import datetime
 import json
 import re
 import threading
@@ -174,6 +180,17 @@ MIN_INTERVAL = 1.5
 # Two attempts still covers a transient queue page without stalling the scan.
 MAX_ATTEMPTS = 2
 BACKOFF = (4.0, 10.0, 25.0)
+# One ranged call answers a whole scan window. A 31-day range returns the same
+# `free` rows as 31 single-day calls (the `busy` grid rows it also carries are
+# dropped by BOOKABLE_TYPES), costs ~160 KB, and replaces ~31 requests plus
+# ~31 pacing sleeps - which is what made this provider 58% of total scan time.
+RANGE_DAYS = 31
+# The widget publishes a ~3-month window; never ask beyond it.
+MAX_AHEAD_DAYS = 89
+# After a failed span fetch, leave that room alone for this long. The scan asks
+# for each day separately, so without a cooldown one throttled room would
+# re-attempt the whole window once per day.
+FAILURE_COOLDOWN = 120.0
 # ``type`` values SimplyBook uses for a time it will actually sell.  An allowlist,
 # never a blocklist: "busy" and friends must never leak into the calendar.
 BOOKABLE_TYPES = {"free", "available"}
@@ -412,6 +429,34 @@ def _slot_times(payload, day: str) -> list[str]:
     return sorted(found)
 
 
+def _slots_by_day(payload) -> dict[str, list[str]]:
+    """``day -> [HH:MM]`` for a *ranged* payload, keeping only bookable rows.
+
+    Same allowlist as :func:`_slot_times`, but bucketed by each row's own
+    ``date`` instead of being restricted to a single day, so one 31-day response
+    can answer every day of a scan.
+    """
+    if not isinstance(payload, list):
+        raise AdapterError(f"simplybook: unexpected time-slots payload {str(payload)[:120]}")
+
+    by_day: dict[str, set[str]] = {}
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        kind = str(item.get("type") or item.get("status") or "").strip().lower()
+        if kind and kind not in BOOKABLE_TYPES:
+            continue
+        day = str(item.get("date") or item.get("client_date") or "")[:10]
+        if not _DAY_RE.fullmatch(day):
+            continue
+        label = str(item.get("time") or item.get("start_time") or item.get("start")
+                    or item.get("id") or "")
+        stamp = parse_hhmm(label)
+        if stamp:
+            by_day.setdefault(day, set()).add(stamp)
+    return {day: sorted(times) for day, times in by_day.items()}
+
+
 def _add_minutes(hhmm: str, minutes: int) -> str | None:
     hours, mins = (int(part) for part in hhmm.split(":"))
     total = hours * 60 + mins + minutes
@@ -485,6 +530,15 @@ class EnigmariumRoom:
         self.provider_id = provider
         self.service_id = service
 
+        # bookable starts for a whole span, so a full scan costs one call per
+        # room instead of one per room per day
+        self._window: dict[str, list[str]] | None = None
+        self._window_span: tuple[str, str] | None = None
+        self._window_lock = threading.Lock()
+        # a failed span fetch is not retried per day - without this one throttled
+        # room would re-attempt the whole window once for every day of the scan
+        self._window_failed_at: float | None = None
+
     def __repr__(self) -> str:  # pragma: no cover - debugging aid
         return (f"<EnigmariumRoom provider={self.provider_id} service={self.service_id} "
                 f"{self.base_url}>")
@@ -505,18 +559,56 @@ class EnigmariumRoom:
                              referer=f"{self.base_url}/v2/?widget-type=iframe",
                              what=f"time-slots {day}")
 
+    def range_url(self, start: str, end: str) -> str:
+        query = urllib.parse.urlencode({
+            "from": start,
+            "to": end,
+            "provider": self.provider_id,
+            "service": self.service_id,
+            "count": str(DEFAULT_COUNT),
+        })
+        return f"{self.base_url}{SLOTS_PATH}?{query}"
+
+    def _window_for(self, day: str) -> dict[str, list[str]]:
+        """Bookable starts for a whole span, fetched once per room per scan."""
+        with self._window_lock:
+            span = self._window_span
+            if self._window is not None and span and span[0] <= day <= span[1]:
+                return self._window
+
+            if (self._window_failed_at is not None
+                    and time.monotonic() - self._window_failed_at < FAILURE_COOLDOWN):
+                raise AdapterError(
+                    "simplybook: span fetch failed moments ago, not retrying yet")
+
+            first = datetime.date.fromisoformat(day)
+            last = first + datetime.timedelta(days=RANGE_DAYS - 1)
+            limit = datetime.date.today() + datetime.timedelta(days=MAX_AHEAD_DAYS)
+            last = max(first, min(last, limit))
+
+            try:
+                payload = _request_json(
+                    self.range_url(day, last.isoformat()),
+                    referer=f"{self.base_url}/v2/?widget-type=iframe",
+                    what=(f"time-slots {day}..{last.isoformat()} "
+                          f"provider={self.provider_id} service={self.service_id}"),
+                )
+            except Exception:
+                self._window_failed_at = time.monotonic()
+                raise
+            self._window = _slots_by_day(payload)
+            self._window_span = (day, last.isoformat())
+            self._window_failed_at = None
+            return self._window
+
     def slots(self, day: str) -> list[Slot]:
         if not _DAY_RE.fullmatch(day or ""):
             raise AdapterError(f"simplybook: bad day {day!r}, expected YYYY-MM-DD")
-        payload = _request_json(
-            self.slots_url(day),
-            referer=f"{self.base_url}/v2/?widget-type=iframe",
-            what=f"time-slots {day} provider={self.provider_id} service={self.service_id}",
-        )
+        times = self._window_for(day).get(day, [])
         minutes = _service_duration(self.base_url, self.service_id)
         return [
             Slot(time=hhmm, end=_add_minutes(hhmm, minutes) if minutes else None)
-            for hhmm in _slot_times(payload, day)
+            for hhmm in times
         ]
 
 
