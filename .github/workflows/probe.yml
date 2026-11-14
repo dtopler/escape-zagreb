@@ -1,0 +1,24 @@
+name: probe
+
+# Manual network probe: how fast can a runner actually reach each booking host?
+# Dispatch by hand, costs about a minute, publishes nothing.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: reachability and latency per host
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: python tools/probe_hosts.py

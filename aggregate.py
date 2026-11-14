@@ -275,6 +275,9 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
         sem = semaphore_for(url)
         with sem, (gate if gate is not None else _nullcontext()):
             call_started = time.perf_counter()
+            # printed before the call on purpose: when a provider hangs, the last
+            # "->" line without a matching "<-" names it
+            print(f"  -> {room['id']} {day}", flush=True)
             try:
                 slots = adapter.slots(room, day)
                 value = [s.as_dict() for s in slots]
@@ -297,6 +300,8 @@ def scan(days_ahead: int = 30, *, start: str | None = None,
                 return key, []
             finally:
                 seconds = time.perf_counter() - call_started
+                if seconds >= 2.0:
+                    print(f"  <- {room['id']} {day} {seconds:.1f}s", flush=True)
                 with _timing_lock:
                     _timing[room["provider_id"]] = (
                         _timing.get(room["provider_id"], 0.0) + seconds)
